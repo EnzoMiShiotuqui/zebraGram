@@ -1,31 +1,22 @@
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
+import { register, reset } from "../../slices/authSlice";
 import "./Auth.css";
 
-// Components
-import { Link } from "react-router-dom";
-import Message from "../../components/Message/Message";
-
-// Hooks
-import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-
-// redux
-import { register, reset } from "../../slices/authSlice";
-
 const Register = () => {
-  // Criando States
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const dispatch = useDispatch();
-
   const { loading, error } = useSelector((state) => state.auth);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Setando o user
     const user = {
       name,
       email,
@@ -33,14 +24,21 @@ const Register = () => {
       confirmPassword,
     };
 
-    console.log(user);
-
     dispatch(register(user));
   };
 
   useEffect(() => {
+    if (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro ao cadastrar',
+        text: error,
+        background: '#121212',
+        color: '#fff',          
+      });
+    }
     dispatch(reset());
-  }, [dispatch]);
+  }, [error, dispatch]);
 
   return (
     <div id="register">
@@ -73,7 +71,6 @@ const Register = () => {
         />
         {!loading && <input type="submit" value="Cadastrar" />}
         {loading && <input type="submit" value="Aguarde..." disabled />}
-        {error && <Message msg={error} type="error"/>}
         <p>
           Já tem conta? <Link to="/login">Clique aqui</Link>
         </p>
