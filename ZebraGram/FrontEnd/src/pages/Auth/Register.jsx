@@ -1,62 +1,85 @@
-import "./Auth.css"
+import "./Auth.css";
 
 // Components
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
+import Message from "../../components/Message/Message";
 
 // Hooks
-import { useState, useEffect } from "react"
-import {useSelector, useDispatch} from 'react-redux'
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 // redux
-import {register, reset} from '../../slices/authSlice'
+import { register, reset } from "../../slices/authSlice";
 
 const Register = () => {
-
   // Criando States
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const {loading, error} = useSelector((state) => state.auth)
-
+  const { loading, error } = useSelector((state) => state.auth);
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     // Setando o user
     const user = {
       name,
       email,
-      password, 
-      confirmPassword
-    }
+      password,
+      confirmPassword,
+    };
 
-    console.log(user)
+    console.log(user);
 
-    dispatch(register(user))
+    dispatch(register(user));
   };
 
   useEffect(() => {
-    dispatch(reset())
-  }, [dispatch])
+    dispatch(reset());
+  }, [dispatch]);
 
   return (
     <div id="register">
       <h2>Zebragram</h2>
       <p className="subtitle">Cadastre-se para ver as fotos dos seus amigos!</p>
       <form onSubmit={handleSubmit}>
-        <input type="text" placeholder="Nome" onChange={(e) => setName(e.target.value)} value={name || ""} />
-        <input type="email" placeholder="E-mail" onChange={(e) => setEmail(e.target.value)} value={email || ""}/>
-        <input type="password" placeholder="Senha" onChange={(e) => setPassword(e.target.value)} value={password || ""} />
-        <input type="password" placeholder="Confirmar a senha" onChange={(e) => setConfirmPassword(e.target.value)} value={confirmPassword || ""}/>
-        <input type="submit" value="Cadastrar"/>
-        <p>Já tem conta? <Link to="/login">Clique aqui</Link></p>
+        <input
+          type="text"
+          placeholder="Nome"
+          onChange={(e) => setName(e.target.value)}
+          value={name || ""}
+        />
+        <input
+          type="email"
+          placeholder="E-mail"
+          onChange={(e) => setEmail(e.target.value)}
+          value={email || ""}
+        />
+        <input
+          type="password"
+          placeholder="Senha"
+          onChange={(e) => setPassword(e.target.value)}
+          value={password || ""}
+        />
+        <input
+          type="password"
+          placeholder="Confirmar a senha"
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          value={confirmPassword || ""}
+        />
+        {!loading && <input type="submit" value="Cadastrar" />}
+        {loading && <input type="submit" value="Aguarde..." disabled />}
+        {error && <Message msg={error} type="error"/>}
+        <p>
+          Já tem conta? <Link to="/login">Clique aqui</Link>
+        </p>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default Register
+export default Register;
