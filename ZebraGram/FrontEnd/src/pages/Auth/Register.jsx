@@ -12,7 +12,7 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.auth);
+  const { loading, error, success } = useSelector((state) => state.auth);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -28,6 +28,9 @@ const Register = () => {
   };
 
   useEffect(() => {
+    // Resetar o estado ao entrar na página de registro
+    dispatch(reset());
+
     if (error) {
       Swal.fire({
         icon: 'error',
@@ -36,9 +39,20 @@ const Register = () => {
         background: '#121212',
         color: '#fff',          
       });
+      dispatch(reset()); // Resetar o estado após exibir o erro
     }
-    dispatch(reset());
-  }, [error, dispatch]);
+
+    if (success) {
+      Swal.fire({
+        icon: 'success',
+        title: `Bem-vindo, ${name}!`,
+        text: 'Seu cadastro foi realizado com sucesso.',
+        background: '#121212',
+        color: '#fff',
+      });
+      dispatch(reset()); // Resetar o estado após exibir o sucesso
+    }
+  }, [error, success, dispatch, name]);
 
   return (
     <div id="register">
