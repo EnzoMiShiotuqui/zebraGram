@@ -10,7 +10,6 @@ import {
 } from "react-icons/bs";
 
 // Hooks
-import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -44,20 +43,22 @@ const Navbar = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         // Se confirmado, executar o logout
+        dispatch(logout());
+        dispatch(reset()); // Resetar o estado após logout
+  
         Swal.fire({
           title: "Deslogado!",
           text: `Até mais!`,
           icon: "success",
           background: "#121212",
           color: "#fff",
-          
+        }).then(() => {
+          navigate("/login"); // Navegar para a página de login após o alert
         });
-        dispatch(logout());
-        dispatch(reset());
-        navigate("/login");
       }
     });
   };
+  
 
   return (
     <nav id="nav">
