@@ -1,8 +1,8 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit"
-import userService from "../services/useService"
+import userService from "../services/userService.js"
 
 const initialState = {
-    user: {},
+    user: null,
     error: false,
     sucess: false,
     loading: false, 
@@ -13,17 +13,17 @@ const initialState = {
 
 // get user details
 export const profile = createAsyncThunk(
-    "user/profile",
-    async(user, thunkAPI) => {
+  "user/profile",
+  async (user, thunkAPI) => {
+    const token = thunkAPI.getState().auth.user.token;
+    // console.log("Token: ", token); 
 
-        const token = thunkAPI.getState().auth.user.token
+    const data = await userService.profile(user, token);
 
-        const data = await userService.profile(user, token)
+    return data;
+  }
+);
 
-        return data
-
-    }
-)  
 
 
 export const userSlice = createSlice({
@@ -46,7 +46,7 @@ export const userSlice = createSlice({
             state.error = null;
             state.user = action.payload;
         })
-    }
+    },
 });
 
 export const {resetMessage} = userSlice.actions;
